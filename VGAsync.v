@@ -26,8 +26,9 @@
     `define     REG_VALUE_POS   6 // X position of registers values
     `define     REG_VALUE_WIDTH 8 // X position of registers values
 
-module VGAdebugScreen(
-    input               clk,  // VGA clock 108 MHz
+module VGAdebugScreen
+(
+    input               clk,        // VGA clock 108 MHz
     input               en,
     output      [4:0]   regAddr,    // Used to request registers value from SchoolMIPS core
     input       [31:0]  regData,    // Register value from SchoolMIPS
@@ -41,32 +42,18 @@ module VGAdebugScreen(
 
     wire    [11:0]  pixelLine;          // pixel Y coordinate
     wire    [11:0]  pixelColumn;        // pixel X coordinate
-    reg     [11:0]  symbolLine;         // symbol Y coordinate       
-    reg     [11:0]  symbolColumn;       // symbol X coordinate
-
     wire    [7:0]   symbolCode;         // Current symbol code
     wire            onoff;              // Is pixel on or off
     wire    [12:0]  RGB;
-    
     wire    [7:0]   symbolCodeFromConv; // Symbol code from bin2ascii converter
     wire    [7:0]   symbolCodeFromROM;  // Symbol code from displayROM
-
-    wire     [3:0]   tetrad; // 4-byte value to be converted to 0...9, A...F symbol
+    wire    [3:0]   tetrad;             // 4-byte value to be converted to 0...9, A...F symbol
     wire    [2:0]   PixX;
     wire    [3:0]   PixY;
     wire    [11:0]  SymY;
     wire    [11:0]  SymX;
 
-
-
-    assign tetrad = regData >> (28 - (SymX - `REG_VALUE_POS) * 4);
-    //assign regAddr     = RegAddr;
-
-    initial 
-    begin
-        symbolLine = 0 ;
-        symbolColumn = 0 ;
-    end
+    assign tetrad = regData >> ( 28 - ( SymX - `REG_VALUE_POS ) * 4 ) ;
 
     VGAsync vgasync_0
     (
@@ -96,7 +83,7 @@ module VGAdebugScreen(
     displayROM dispROM_0
     (
         .symbolLine     ( SymY              ),
-        .symbolColumn   ( SymX      ),
+        .symbolColumn   ( SymX              ),
         .symbolCode     ( symbolCodeFromROM )
     );
 
@@ -106,31 +93,12 @@ module VGAdebugScreen(
         .symbolCode ( symbolCodeFromConv    )
     );
 
-    assign  RGBsig = (pixelLine < 480 && pixelColumn < 640) ? RGB : 12'h000;
-    assign  RGB = onoff ? fgColor : bgColor;
+    assign  RGBsig = ( pixelLine < 481 && pixelColumn < 641 ) ? RGB : 12'h000 ;
+    assign  RGB = onoff ? fgColor : bgColor ;
 
-    assign symbolCode = (SymX >= `REG_VALUE_POS && SymX < `REG_VALUE_POS + `REG_VALUE_WIDTH) ?
+    assign symbolCode = ( SymX >= `REG_VALUE_POS && SymX < `REG_VALUE_POS + `REG_VALUE_WIDTH ) ?
                         symbolCodeFromConv :
                         symbolCodeFromROM ;
-    //assign  RGBsig = onoff ? fgColor : bgColor;
-    always @(*)
-    begin
-        begin
-            //if(pixelLine < `VVA && pixelColumn < `HVA) // Current pixel is on the screen
-            begin
-
-                symbolColumn    = pixelColumn >> 3;
-                symbolLine      = pixelLine / 15;
-
-                //pixelX = pixelColumn & 3'h7;
-                //pixelY = pixelLine % 15;
-
-                
-
-            end
-            
-        end
-    end
     
 endmodule
 
@@ -140,7 +108,7 @@ module Bin2ASCII
     input       [3:0]   tetrad,
     output      [7:0]   symbolCode
 );
-    assign symbolCode = (tetrad < 10) ? 
+    assign symbolCode = ( tetrad < 10 ) ? 
                         tetrad + 8'h30 :       // 0...9
                         tetrad - 10 + 8'h41 ;  // A...F
 endmodule
@@ -175,11 +143,13 @@ module fontROM
     reg [7:0] glyphROM [4096-1:0];
 
     always @(posedge clk)
-        onoff <= glyphROM[ { symbolCode , y } ][x] ;
+        onoff <= glyphROM[ { symbolCode , y } ][x] ;    //[7-x] ; for testing and Xilinx
+                                                        //[x]for Altera
 
     initial
     begin
-        $readmemh("displayfont.hex", glyphROM, 4095, 0);
+        $readmemh("displayfont.hex", glyphROM,4095,0);  //4095,0) ; for Altera
+                                                        //) ; for testing and Xilinx
     end
 endmodule
 
@@ -196,11 +166,12 @@ module VGA_top
     output  [4:0]       regAddr,
     input   [31:0]      regData
 );
-    assign buzz = 0;
+    assign buzz = 0 ;
 
-    wire [11:0] line;
+    wire [11:0] line ;
 
-    reg clk_en;
+    reg clk_en ;
+
     always @(posedge clk)
     begin
         if( ~rst )
@@ -213,9 +184,9 @@ module VGA_top
     (
         .clk        ( clk       ),  // VGA clock 108 MHz
         .en         ( clk_en    ),
-        .regAddr    ( regAddr),    // Used to request registers value from SchoolMIPS core
-        .regData    ( regData),    // Register value from SchoolMIPS
-        .reset      ( ~rst       ),      // positive reset
+        .regAddr    ( regAddr   ),    // Used to request registers value from SchoolMIPS core
+        .regData    ( regData   ),    // Register value from SchoolMIPS
+        .reset      ( ~rst      ),      // positive reset
         .bgColor    ( 12'hFF0   ),    // Background color in format: RRRRGGGGBBBB, MSB first
         .fgColor    ( 12'h00F   ),    // Foreground color in format: RRRRGGGGBBBB, MSB first
         .RGBsig     ( {R,G,B}   ),     // Output VGA video signal in format: RRRRGGGGBBBB, MSB first
@@ -244,7 +215,7 @@ module VGAsync
     output      [11:0]  SymX,
     output reg  [4:0]   RegAddr
 );
-    integer     counter;
+    integer counter;
 
     assign SymX = column >> 3 ;
 
@@ -256,14 +227,14 @@ module VGAsync
             begin
                 column <= column + 1'b1 ;
                 counter <= counter + 1'b1 ;
-                if(counter == `HWL*15)
+                if( counter == `HWL * 15 + 1 * 32 )
                 begin
                     counter <= 0 ;
                     SymY <= SymY + 80 ;
                     RegAddr <= RegAddr + 1'b1 ;
                 end
                 PixX <= PixX + 1'b1 ;
-                if (PixY == 15)
+                if ( PixY == 15 )
                         PixY <= 0 ;
                 if( column == `HWL )
                 begin
@@ -278,7 +249,7 @@ module VGAsync
                         line <= 12'h0 ;
                         PixY <= 0 ;
                         SymY <= 0 ;
-                        RegAddr <= 0 ;
+                        RegAddr <= 5'h0 ;
                         counter <= 0 ;
                     end
                     
@@ -297,7 +268,7 @@ module VGAsync
         else 
         begin
             counter <= 0 ;
-            PixY  <= 4'b0;
+            PixY  <= 4'b0 ;
             PixX  <= 3'b0 ;
             hsync <= 1'b1 ;
             vsync <= 1'b1 ;
@@ -309,11 +280,11 @@ module VGAsync
         counter = 0 ;
         PixX = 3'b0 ;
         SymY = 12'h0 ;
-        RegAddr = 0 ;
+        RegAddr = 5'h0 ;
         line = 12'h0 ;
         column = 12'h0 ;
-        hsync = 1 ;
-        vsync = 1 ;
+        hsync = 1'b1 ;
+        vsync = 1'b1 ;
     end
     
 endmodule
