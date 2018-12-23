@@ -9,20 +9,20 @@
  *                        Vlasov Dmitriy
  */
 
-    //  VGA constants 640*480
-    //  Horizontal timing
-    `define     HVA             640     //Visible area
-    `define     HFP             16      //Front porch
-    `define     HSP             96      //Sync pulse
-    `define     HBP             48      //Back porch
-    `define     HWL             800     //Whole line
-    //  Vertical timing
-    `define     VVA             480     //Visible area
-    `define     VFP             10      //Front porch
-    `define     VSP             2       //Sync pulse
-    `define     VBP             33      //Back porch
-    `define     VWF             525     //Whole frame
-    //  Reg pos
+    // VGA constants 640*480
+    // Horizontal timing
+    `define     HVA             640     // Visible area
+    `define     HFP             16      // Front porch
+    `define     HSP             96      // Sync pulse
+    `define     HBP             48      // Back porch
+    `define     HWL             800     // Whole line
+    // Vertical timing
+    `define     VVA             480     // Visible area
+    `define     VFP             10      // Front porch
+    `define     VSP             2       // Sync pulse
+    `define     VBP             33      // Back porch
+    `define     VWF             525     // Whole frame
+    // Reg pos
     `define     REG_VALUE_POS   6 // X position of registers values
     `define     REG_VALUE_WIDTH 8 // X position of registers values
 
@@ -60,8 +60,6 @@
         .clk    ( clk           ),
         .en     ( en            ),
         .rst    ( reset         ),
-        .hsync  ( hsync         ),
-        .vsync  ( vsync         ),
         .line   ( pixelLine     ),
         .column ( pixelColumn   ),
         .PixX   ( PixX          ),
@@ -161,11 +159,9 @@ module VGA_top
     output  [3:0]       R,
     output  [3:0]       G,
     output  [3:0]       B,
-    output              buzz,
     output  [4:0]       regAddr,
     input   [31:0]      regData
 );
-    assign buzz = 0 ;
 
     wire [11:0] line ;
 
@@ -193,10 +189,6 @@ module VGA_top
         .vsync      ( vsync     )       // VGA vsync
     );
 
-    initial begin
-        clk_en = 1'b0 ;
-    end
-
 endmodule
 
 module VGAsync
@@ -204,8 +196,6 @@ module VGAsync
     input               clk,        // VGA clock
     input               en,
     input               rst,        // positive reset
-    output reg          hsync,      // hsync output
-    output reg          vsync,      // vsync output
     output reg  [11:0]  line,       // current line number [Y]
     output reg  [11:0]  column,     // current column number [X]
     output reg  [2:0]   PixX,
@@ -250,18 +240,8 @@ module VGAsync
                         SymY <= 0 ;
                         RegAddr <= 5'h0 ;
                         counter <= 0 ;
-                    end
-                    
-                    if( ( line >= ( `VVA + `VFP ) ) && ( line < ( `VVA + `VFP + `VSP ) ) )
-                        vsync <= 1'b0 ;
-                    else
-                        vsync <= 1'b1 ;                
+                    end                        
                 end
-                
-                if( ( column >= ( `HVA + `HFP ) ) && ( column < ( `HVA + `HFP + `HSP ) ) )
-                    hsync <= 1'b0 ;
-                else
-                    hsync <= 1'b1 ; 
             end               
         end
         else 
@@ -269,21 +249,8 @@ module VGAsync
             counter <= 0 ;
             PixY  <= 4'b0 ;
             PixX  <= 3'b0 ;
-            hsync <= 1'b1 ;
-            vsync <= 1'b1 ;
             SymY <= 12'h0 ;
         end
-    end
-
-    initial begin
-        counter = 0 ;
-        PixX = 3'b0 ;
-        SymY = 12'h0 ;
-        RegAddr = 5'h0 ;
-        line = 12'h0 ;
-        column = 12'h0 ;
-        hsync = 1'b1 ;
-        vsync = 1'b1 ;
     end
     
 endmodule*/
