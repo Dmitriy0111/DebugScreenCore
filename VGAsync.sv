@@ -26,7 +26,7 @@
     `define     REG_VALUE_POS   6 // X position of registers values
     `define     REG_VALUE_WIDTH 8 // X position of registers values
 
-module VGAdebugScreen
+/*module VGAdebugScreen
 (
     input               clk,        // VGA clock 108 MHz
     input               en,
@@ -47,13 +47,13 @@ module VGAdebugScreen
     wire    [12:0]  RGB;
     wire    [7:0]   symbolCodeFromConv; // Symbol code from bin2ascii converter
     wire    [7:0]   symbolCodeFromROM;  // Symbol code from displayROM
-    wire    [3:0]   tetrad;             // 4-byte value to be converted to 0...9, A...F symbol
+    wire    [3:0]   bin;             // 4-byte value to be converted to 0...9, A...F symbol
     wire    [2:0]   PixX;
     wire    [3:0]   PixY;
     wire    [11:0]  SymY;
     wire    [11:0]  SymX;
 
-    assign tetrad = regData >> ( 28 - ( SymX - `REG_VALUE_POS ) * 4 ) ;
+    assign bin = regData >> ( 28 - ( SymX - `REG_VALUE_POS ) * 4 ) ;
 
     VGAsync vgasync_0
     (
@@ -87,10 +87,10 @@ module VGAdebugScreen
         .symbolCode     ( symbolCodeFromROM )
     );
 
-    Bin2ASCII bin2asciiconv_0
+    bin2ascii bin2ascii_0
     (
-        .tetrad     ( tetrad                ),
-        .symbolCode ( symbolCodeFromConv    )
+        .bin    ( bin                   ),
+        .ascii  ( symbolCodeFromConv    )
     );
 
     assign  RGBsig = ( pixelLine < 481 && pixelColumn < 641 ) ? RGB : 12'h000 ;
@@ -103,44 +103,43 @@ module VGAdebugScreen
 endmodule
 
 
-module Bin2ASCII
+module bin2ascii
 (
-    input       [3:0]   tetrad,
-    output      [7:0]   symbolCode
+    input   logic   [3 : 0]     bin,
+    output  logic   [7 : 0]     ascii
 );
-    assign symbolCode = ( tetrad < 10 ) ? 
-                        tetrad + 8'h30 :       // 0...9
-                        tetrad - 10 + 8'h41 ;  // A...F
+
+    assign ascii = ( bin <= "9" ) ? bin + "0" : bin - 10 + "A";
+    
 endmodule
 
 
 module displayROM
 (
-    input   [11:0]  symbolLine,    // 0...31
-    input   [11:0]  symbolColumn,  // 0...79
-    output  [7:0]   symbolCode
+    input   logic   [11 : 0]    symbolLine,    // 0...31
+    input   logic   [11 : 0]    symbolColumn,  // 0...79
+    output  logic   [7  : 0]    symbolCode
 );
 
-    reg [7:0] dispROM [2560-1:0];
+    reg [7 : 0] dispROM [2560-1 : 0];
 
     assign symbolCode = dispROM[symbolLine + symbolColumn];
 
     initial
-    begin
         $readmemh("displayROM.hex", dispROM);
-    end
+
 endmodule
 
 module fontROM
 (
-    input               clk,
-    input       [7:0]   symbolCode, // ASCII symbol code
-    input       [2:0]   x,          // X position of pixel in the symbol
-    input       [3:0]   y,          // Y position of pixel in the symbol
-    output reg          onoff       // Is pixel on or off
+    input   logic               clk,
+    input   logic   [7 : 0]     symbolCode, // ASCII symbol code
+    input   logic   [2 : 0]     x,          // X position of pixel in the symbol
+    input   logic   [3 : 0]     y,          // Y position of pixel in the symbol
+    output  logic               onoff       // Is pixel on or off
 );
     
-    reg [7:0] glyphROM [4096-1:0];
+    logic [7 : 0] glyphROM [4096-1 : 0];
 
     always @(posedge clk)
         onoff <= glyphROM[ { symbolCode , y } ][x] ;    //[7-x] ; for testing and Xilinx
@@ -287,4 +286,89 @@ module VGAsync
         vsync = 1'b1 ;
     end
     
+endmodule*/
+
+module vga_top
+(
+    input   logic               clk,    // clock
+    input   logic               resetn, // reset
+    output  logic               hsync,  // hsync output
+    output  logic               vsync,  // vsync output
+    output  logic   [3 : 0]     R,      // R-color
+    output  logic   [3 : 0]     G,      // G-color
+    output  logic   [3 : 0]     B       // B-color
+);
+
+    logic en;
+
+    always_ff @(posedge clk, negedge resetn)
+        if( !resetn )
+            en <= '0;
+        else
+            en <= ~ en;
+
+    always_ff @(posedge clk)
+    if(hsync == '1)
+        R <= R + 1'b1;
+    
+    always_ff @(posedge clk)
+    if(R[3] == '1)
+        G <= G + 1'b1;
+
+    always_ff @(posedge clk)
+    if(B[3] == '1)
+        B <= B + 1'b1;
+
+    vga_signal vga_signal_0
+    (
+        .clk    ( clk       ),  // clock
+        .resetn ( resetn    ),  // reset
+        .en     ( en        ),  // enable
+        .hsync  ( hsync     ),  // hsync output
+        .vsync  ( vsync     )   // vsync output
+    );
+
+endmodule
+
+module vga_signal
+(
+    input   logic       clk,    // clock
+    input   logic       resetn, // reset
+    input   logic       en,     // enable
+    output  logic       hsync,  // hsync output
+    output  logic       vsync   // vsync output
+);
+
+    logic   [9 : 0] hsync_c;
+    logic   [9 : 0] vsync_c;
+
+    assign hsync = hsync_c < ( `HWL - `HSP );
+    assign vsync = vsync_c < ( `VWF - `VSP );
+
+    always_ff @(posedge clk, negedge resetn)
+    begin
+        if( ! resetn )
+        begin
+            hsync_c <= '0;
+            vsync_c <= '0;
+        end
+        else 
+        begin
+            if( en )
+            begin
+                hsync_c <= hsync_c + 1'b1;
+                if( hsync_c == `HWL - 1'b1 )
+                begin
+                    hsync_c <= '0;
+                    vsync_c <= vsync_c + 1'b1;
+                end
+                else if( vsync_c == `VWF - 1'b1 )
+                begin
+                    vsync_c <= '0;
+                    hsync_c <= '0;
+                end
+            end
+        end
+    end
+
 endmodule
