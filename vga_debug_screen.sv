@@ -41,7 +41,7 @@ module vga_debug_screen
         .vsync      ( vsync     ),  // vsync output
         .bgColor    ( bgColor   ),  // Background color in format: RRRRGGGGBBBB, MSB first
         .fgColor    ( fgColor   ),  // Foreground color in format: RRRRGGGGBBBB, MSB first
-        .regData    ( 'h12345678   ),  // Register data input from cpu
+        .regData    ( regData   ),  // Register data input from cpu
         .regAddr    ( regAddr   ),  // Register data output to cpu
         .R          ( R         ),  // R-color
         .G          ( G         ),  // G-color

@@ -40,7 +40,7 @@ module vga_top
 
     assign  bin = regData >> ( 28 - ( sym_x - `REG_VALUE_POS ) * 4 );
     assign  regAddr = sym_y;
-    assign  ascii_regData = ( bin <= "9" ) ? bin + "0" : bin - 10 + "A";    // binary to ascii convertion
+    assign  ascii_regData = ( bin <= 'd9 ) ? bin + "0" : bin - 10 + "A";    // binary to ascii convertion
 
     assign  { R, G, B } =   ( ( sym_x < 'd80 ) && ( sym_y < 'd32 ) ) ? // symbol in visible area ?
                             ( bg_fg ? fgColor : bgColor ) :

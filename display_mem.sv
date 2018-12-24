@@ -20,6 +20,6 @@ module display_mem
     assign ascii = mem[ disp_x + disp_y ];
 
     initial // loading display memory
-        $readmemh("display_mem.hex", mem);
+        $readmemh("display_mem_fox.hex", mem);
 
 endmodule : display_mem

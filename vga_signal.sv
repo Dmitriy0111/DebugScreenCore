@@ -22,8 +22,8 @@ module vga_signal
     logic   [9 : 0] hsync_c;    // hsync counter
     logic   [9 : 0] vsync_c;    // vsync counter
 
-    assign hsync = hsync_c < ( `HWL - `HSP );
-    assign vsync = vsync_c < ( `VWF - `VSP );
+    assign hsync = ( hsync_c < ( `HVA + `HFP ) ) || ( hsync_c >= ( `HVA + `HFP + `HSP ) );
+    assign vsync = ( vsync_c < ( `VVA + `VFP ) ) || ( vsync_c >= ( `VVA + `VFP + `VSP ) );
 
     always_ff @(posedge clk, negedge resetn)
     begin
@@ -42,7 +42,7 @@ module vga_signal
                     hsync_c <= '0;
                     vsync_c <= vsync_c + 1'b1;
                 end
-                else if( vsync_c == `VWF - 1'b1 )
+                else if( vsync_c == `VWF )
                 begin
                     vsync_c <= '0;
                 end

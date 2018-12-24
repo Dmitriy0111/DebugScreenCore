@@ -24,13 +24,13 @@ module sm_top
     assign led = 0 ;
 
     sm_debouncer #(.SIZE(4)) f0(clkIn, 4'b1000, devide);
-    sm_debouncer #(.SIZE(1)) f1(clkIn, clkEnable, enable);
+    sm_debouncer #(.SIZE(1)) f1(clkIn, 1, enable);
     //sm_debouncer #(.SIZE(5)) f2(clkIn, regAddr,   addr  );
 
     wire   [ 4:0 ] addr;
     wire   [31:0 ] regData;
 
-    VGA_top VGA_top_0
+    /*VGA_top VGA_top_0
     (
         .clk    ( clkIn     ),
         .rst    ( rst_n     ),
@@ -42,6 +42,19 @@ module sm_top
         .buzz   ( buzz      ),
         .regAddr( addr      ),
         .regData( regData   )
+    );*/
+
+    vga_debug_screen vga_debug_screen_0
+    (
+        .clk        ( clkIn ),        // clock
+        .resetn     ( rst_n),     // reset
+        .hsync      ( hsync ),      // hsync output
+        .vsync      ( vsync ),      // vsync output
+        .regData    ( regData      ),    // Register data input from cpu
+        .regAddr    ( addr   ),    // Register data output to cpu
+        .R          ( R ),          // R-color
+        .G          ( G ),          // G-color
+        .B          ( B )           // B-color
     );
 
     //cores
