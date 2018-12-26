@@ -14,7 +14,8 @@ RTL_DIR  = $(PWD)/rtl
 TB_DIR   = $(PWD)/tb
 
 ########################################################
-# common make targets
+## 				common make targets					  ##
+########################################################
 
 clean: \
 	sim_clean
@@ -25,7 +26,8 @@ sim_all: \
 sim: sim_gui
 
 ########################################################
-# simulation - Modelsim
+##  			simulation - Modelsim			      ##
+########################################################
 
 VSIM_DIR = $(PWD)/sim_modelsim
 

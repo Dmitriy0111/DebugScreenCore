@@ -3,9 +3,10 @@
 *  Data            :   2018.12.24
 *  Language        :   SystemVerilog
 *  Description     :   This is vga top module
-*  Copyright(c)    :   2018 Vlasov Dmitriy
-*                           Barsukov Dmitriy
-*                           Stanislav Zhelnio
+*  Copyright(c)    :   2018 - 2019
+*                      Barsukov Dmitriy
+*                      Vlasov Dmitriy
+*                      Stanislav Zhelnio
 */
 
 `include    "vga.svh"
@@ -17,8 +18,8 @@ module vga_top
     input   logic               en,         // enable input
     output  logic               hsync,      // hsync output
     output  logic               vsync,      // vsync output
-    input   logic   [11 : 0]    bgColor,    // background color in format: RRRRGGGGBBBB, MSB first
-    input   logic   [11 : 0]    fgColor,    // foreground color in format: RRRRGGGGBBBB, MSB first
+    input   logic   [11 : 0]    bgColor,    // background color
+    input   logic   [11 : 0]    fgColor,    // foreground color
     input   logic   [31 : 0]    regData,    // register data input from cpu
     output  logic   [4  : 0]    regAddr,    // register addr output to cpu
     output  logic   [3  : 0]    R,          // R-color
@@ -40,9 +41,9 @@ module vga_top
 
     assign  bin = regData >> ( 28 - ( sym_x - `REG_VALUE_POS ) * 4 );
     assign  regAddr = sym_y;
-    assign  ascii_regData = ( bin <= 'd9 ) ? bin + "0" : bin - 10 + "A";    // binary to ascii convertion
+    assign  ascii_regData = ( bin <= 'd9 ) ? bin + "0" : bin - 10 + "A"; // binary to ascii convertion
 
-    assign  { R, G, B } =   ( ( sym_x < 'd80 ) && ( sym_y < 'd32 ) ) ? // symbol in visible area ?
+    assign  { R, G, B } =   ( ( sym_x < 'd80 ) && ( sym_y < 'd32 ) ) ? // symbol is in visible area ?
                             ( bg_fg ? fgColor : bgColor ) :
                             12'h000;
 

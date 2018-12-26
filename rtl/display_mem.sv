@@ -3,9 +3,10 @@
 *  Data            :   2018.12.24
 *  Language        :   SystemVerilog
 *  Description     :   This is memory for display
-*  Copyright(c)    :   2018 Vlasov Dmitriy
-*                           Barsukov Dmitriy
-*                           Stanislav Zhelnio
+*  Copyright(c)    :   2018 - 2019
+*                      Barsukov Dmitriy
+*                      Vlasov Dmitriy
+*                      Stanislav Zhelnio
 */
 
 module display_mem
@@ -20,6 +21,6 @@ module display_mem
     assign ascii = mem[ disp_x + disp_y ];
 
     initial // loading display memory
-        $readmemh("display_mem_fox.hex", mem);
+        $readmemh("../vga_mem/display_mem.hex", mem);
 
 endmodule : display_mem

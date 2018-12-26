@@ -1,7 +1,7 @@
-# CoreDebugScreen
+# DebugScreenCore
 
-## CoreDebugScreen ( VGA 640 * 480 60 Hz )
-vga_top is top module CoreDebugScreen
+## DebugScreenCore ( VGA 640 * 480 60 Hz )
+vga_top is top module DebugScreenCore
 
 ### Clock, reset, enable input's:
 *   clk for connecting clock from pll (25.175 MHz) or from input FPGA pin 50 Mhz or 100 MHz;

@@ -3,9 +3,10 @@
 *  Data            :   2018.12.24
 *  Language        :   SystemVerilog
 *  Description     :   This is small testbench file
-*  Copyright(c)    :   2018 Vlasov Dmitriy
-*                           Barsukov Dmitriy
-*                           Stanislav Zhelnio
+*  Copyright(c)    :   2018 - 2019
+*                      Barsukov Dmitriy
+*                      Vlasov Dmitriy
+*                      Stanislav Zhelnio
 */
 
 module vga_tb();

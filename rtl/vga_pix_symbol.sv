@@ -3,9 +3,10 @@
 *  Data            :   2018.12.24
 *  Language        :   SystemVerilog
 *  Description     :   This is vga unit for generating pixel, symbol and display position
-*  Copyright(c)    :   2018 Vlasov Dmitriy
-*                           Barsukov Dmitriy
-*                           Stanislav Zhelnio
+*  Copyright(c)    :   2018 - 2019
+*                      Barsukov Dmitriy
+*                      Vlasov Dmitriy
+*                      Stanislav Zhelnio
 */
 
 `include    "vga.svh"
@@ -26,9 +27,9 @@ module vga_pix_symbol
     logic  [13 : 0]  line;      // current line number [Y]
     logic  [9  : 0]  sym_x_int; // symbol_x internal counter
 
-    assign sym_x = sym_x_int[3 +: 7];
-    assign pix_x = line[0  +: 3];
-    assign disp_x = sym_x;
+    assign  sym_x = sym_x_int[3 +: 7],
+            pix_x = line[0 +: 3],
+            disp_x = sym_x;
 
     always_ff @(posedge clk, negedge resetn)
         if( !resetn )

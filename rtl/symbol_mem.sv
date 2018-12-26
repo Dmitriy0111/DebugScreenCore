@@ -3,9 +3,10 @@
 *  Data            :   2018.12.24
 *  Language        :   SystemVerilog
 *  Description     :   This is memory for symbols
-*  Copyright(c)    :   2018 Vlasov Dmitriy
-*                           Barsukov Dmitriy
-*                           Stanislav Zhelnio
+*  Copyright(c)    :   2018 - 2019
+*                      Barsukov Dmitriy
+*                      Vlasov Dmitriy
+*                      Stanislav Zhelnio
 */
 
 module symbol_mem
@@ -19,11 +20,12 @@ module symbol_mem
     
     logic [7 : 0] mem [4096-1 : 0]; // glyph memory
 
-    always @(posedge clk)
-        bg_fg <= mem[ { ascii, pix_y } ][ pix_x ]; //[7-pix_x]; for testing and Xilinx
-                                                   //[pix_x]; for Altera
+    always_ff @(posedge clk)
+        bg_fg <= mem[ { ascii, pix_y } ][7-pix_x];  //[7-pix_x]; for testing and Xilinx
+                                                    //[pix_x]; for Altera
 
     initial // loading glyph memory table
-        $readmemh("symbol_mem.hex", mem,4095,0); //4095,0); for Altera
-                                                    //); for testing and Xilinx
+        $readmemh("../vga_mem/symbol_mem.hex", mem); //4095,0); for Altera
+                                                            //); for testing and Xilinx
+
 endmodule : symbol_mem

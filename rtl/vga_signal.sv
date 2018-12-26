@@ -3,9 +3,10 @@
 *  Data            :   2018.12.24
 *  Language        :   SystemVerilog
 *  Description     :   This is vga unit for generating hsync and vsync signal's
-*  Copyright(c)    :   2018 Vlasov Dmitriy
-*                           Barsukov Dmitriy
-*                           Stanislav Zhelnio
+*  Copyright(c)    :   2018 - 2019
+*                      Barsukov Dmitriy
+*                      Vlasov Dmitriy
+*                      Stanislav Zhelnio
 */
 
 `include    "vga.svh"
@@ -22,8 +23,8 @@ module vga_signal
     logic   [9 : 0] hsync_c;    // hsync counter
     logic   [9 : 0] vsync_c;    // vsync counter
 
-    assign hsync = ( hsync_c < ( `HVA + `HFP ) ) || ( hsync_c >= ( `HVA + `HFP + `HSP ) );
-    assign vsync = ( vsync_c < ( `VVA + `VFP ) ) || ( vsync_c >= ( `VVA + `VFP + `VSP ) );
+    assign  hsync = ( hsync_c < ( `HVA + `HFP ) ) || ( hsync_c >= ( `HVA + `HFP + `HSP ) ),
+            vsync = ( vsync_c < ( `VVA + `VFP ) ) || ( vsync_c >= ( `VVA + `VFP + `VSP ) );
 
     always_ff @(posedge clk, negedge resetn)
     begin
