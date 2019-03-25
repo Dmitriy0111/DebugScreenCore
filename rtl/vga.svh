@@ -22,6 +22,3 @@
 `define     VSP             2       // sync pulse
 `define     VBP             33      // back porch
 `define     VWF             525     // whole frame
-// Reg position
-`define     REG_VALUE_POS   6       // x position of registers values
-`define     REG_VALUE_WIDTH 8       // number of symbols registers

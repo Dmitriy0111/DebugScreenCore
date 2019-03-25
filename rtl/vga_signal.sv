@@ -13,21 +13,20 @@
 
 module vga_signal
 (
-    input   logic       clk,    // clock
-    input   logic       resetn, // reset
-    input   logic       en,     // enable
-    output  logic       hsync,  // hsync output
-    output  logic       vsync   // vsync output
+    input   logic   [0  : 0]    clk,    // clock
+    input   logic   [0  : 0]    resetn, // reset
+    input   logic   [0  : 0]    en,     // enable
+    output  logic   [0  : 0]    hsync,  // hsync output
+    output  logic   [0  : 0]    vsync   // vsync output
 );
 
-    logic   [9 : 0] hsync_c;    // hsync counter
-    logic   [9 : 0] vsync_c;    // vsync counter
+    logic   [9 : 0]     hsync_c;    // hsync counter
+    logic   [9 : 0]     vsync_c;    // vsync counter
 
     assign  hsync = ( hsync_c < ( `HVA + `HFP ) ) || ( hsync_c >= ( `HVA + `HFP + `HSP ) ),
             vsync = ( vsync_c < ( `VVA + `VFP ) ) || ( vsync_c >= ( `VVA + `VFP + `VSP ) );
 
     always_ff @(posedge clk, negedge resetn)
-    begin
         if( !resetn )
         begin
             hsync_c <= '0;
@@ -49,6 +48,5 @@ module vga_signal
                 end
             end
         end
-    end
 
 endmodule : vga_signal

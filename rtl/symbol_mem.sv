@@ -11,11 +11,11 @@
 
 module symbol_mem
 (
-    input   logic               clk,    // clock
+    input   logic   [0 : 0]     clk,    // clock
     input   logic   [7 : 0]     ascii,  // ascii symbol code
     input   logic   [2 : 0]     pix_x,  // x position of pixel in the symbol
     input   logic   [3 : 0]     pix_y,  // y position of pixel in the symbol
-    output  logic               bg_fg   // background or foreground enable
+    output  logic   [0 : 0]     bg_fg   // background or foreground enable
 );
     
     logic [7 : 0] mem [4096-1 : 0]; // glyph memory
@@ -25,7 +25,7 @@ module symbol_mem
                                                     //[pix_x]; for Altera
 
     initial // loading glyph memory table
-        $readmemh("../vga_mem/symbol_mem.hex", mem); //4095,0); for Altera
-                                                            //); for testing and Xilinx
+        $readmemh("../vga_mem/symbol_mem.hex", mem);    //4095,0); for Altera
+                                                        //); for testing and Xilinx
 
 endmodule : symbol_mem

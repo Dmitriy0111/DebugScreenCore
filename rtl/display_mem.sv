@@ -10,7 +10,9 @@
 */
 
 module display_mem
-(
+#(
+    parameter                   path2dm = "../vga_mem/display_mem_nanoFOX.hex" // path to display name
+)(
     input   logic   [6  : 0]    disp_x,  // display x symbol position
     input   logic   [13 : 0]    disp_y,  // display y symbol position
     output  logic   [7  : 0]    ascii    // ascii value of display symbol
@@ -21,6 +23,6 @@ module display_mem
     assign ascii = mem[ disp_x + disp_y ];
 
     initial // loading display memory
-        $readmemh("../vga_mem/display_mem.hex", mem);
+        $readmemh("../vga_mem/display_mem_SchoolMIPS.hex", mem);
 
 endmodule : display_mem

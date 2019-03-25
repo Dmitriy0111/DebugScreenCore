@@ -19,10 +19,10 @@ module vga_tb();
     parameter           background = 12'h00f;
     parameter           foreground = 12'hf00;
 
-    bit                 clk;
-    bit                 resetn;
-    logic               hsync;
-    logic               vsync;
+    bit     [0  : 0]    clk;
+    bit     [0  : 0]    resetn;
+    logic   [0  : 0]    hsync;
+    logic   [0  : 0]    vsync;
     logic   [3  : 0]    R;
     logic   [3  : 0]    G;
     logic   [3  : 0]    B;

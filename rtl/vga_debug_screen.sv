@@ -9,15 +9,17 @@
 *                      Stanislav Zhelnio
 */
 
+`define cpu "nanoFOX"
+
 module vga_debug_screen_50MHz
 #(
     parameter                   bgColor = 12'h00f,
                                 fgColor = 12'hf00
 )(
-    input   logic               clk,        // clock 
-    input   logic               resetn,     // reset
-    output  logic               hsync,      // hsync output
-    output  logic               vsync,      // vsync output
+    input   logic   [0  : 0]    clk,        // clock 
+    input   logic   [0  : 0]    resetn,     // reset
+    output  logic   [0  : 0]    hsync,      // hsync output
+    output  logic   [0  : 0]    vsync,      // vsync output
     input   logic   [31 : 0]    regData,    // Register data input from cpu
     output  logic   [4  : 0]    regAddr,    // Register data output to cpu
     output  logic   [3  : 0]    R,          // R-color
@@ -25,7 +27,7 @@ module vga_debug_screen_50MHz
     output  logic   [3  : 0]    B           // B-color
 );
 
-    logic   en;
+    logic   [0  : 0]    en;
 
     always_ff @(posedge clk, negedge resetn)
         if( !resetn )
@@ -33,7 +35,11 @@ module vga_debug_screen_50MHz
         else
             en <= ~ en;
 
-    vga_top vga_top_0
+    vga_ds_top 
+    #(
+        .cpu        ( `cpu      )
+    )
+    vga_ds_top_0
     (
         .clk        ( clk       ),  // clock
         .resetn     ( resetn    ),  // reset
@@ -56,10 +62,10 @@ module vga_debug_screen_pll_25_175MHz
     parameter                   bgColor = 12'h00f,
                                 fgColor = 12'hf00
 )(
-    input   logic               clk,        // clock 25.175 MHz from pll
-    input   logic               resetn,     // reset
-    output  logic               hsync,      // hsync output
-    output  logic               vsync,      // vsync output
+    input   logic   [0  : 0]    clk,        // clock 25.175 MHz from pll
+    input   logic   [0  : 0]    resetn,     // reset
+    output  logic   [0  : 0]    hsync,      // hsync output
+    output  logic   [0  : 0]    vsync,      // vsync output
     input   logic   [31 : 0]    regData,    // Register data input from cpu
     output  logic   [4  : 0]    regAddr,    // Register data output to cpu
     output  logic   [3  : 0]    R,          // R-color
@@ -67,7 +73,11 @@ module vga_debug_screen_pll_25_175MHz
     output  logic   [3  : 0]    B           // B-color
 );
 
-    vga_top vga_top_0
+    vga_ds_top 
+    #(
+        .cpu        ( `cpu      )
+    )
+    vga_ds_top_0
     (
         .clk        ( clk       ),  // clock
         .resetn     ( resetn    ),  // reset

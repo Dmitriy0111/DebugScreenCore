@@ -13,9 +13,9 @@
 
 module vga_pix_symbol
 (
-    input   logic               clk,    // clock
-    input   logic               resetn, // reset
-    input   logic               en,     // enable module input
+    input   logic   [0  : 0]    clk,    // clock
+    input   logic   [0  : 0]    resetn, // reset
+    input   logic   [0  : 0]    en,     // enable module input
     output  logic   [2  : 0]    pix_x,  // x pixel position in the symbol
     output  logic   [3  : 0]    pix_y,  // y pixel position in the symbol
     output  logic   [6  : 0]    sym_x,  // symbol X number on the screen
