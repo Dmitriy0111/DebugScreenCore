@@ -10,7 +10,9 @@
 */
 
 module symbol_mem
-(
+#(
+    parameter                   path2sm = "insert path to symbol_mem.hex" // path to symbol mem
+)(
     input   logic   [0 : 0]     clk,    // clock
     input   logic   [7 : 0]     ascii,  // ascii symbol code
     input   logic   [2 : 0]     pix_x,  // x position of pixel in the symbol
@@ -25,7 +27,7 @@ module symbol_mem
                                                     //[pix_x]; for Altera
 
     initial // loading glyph memory table
-        $readmemh("../vga_mem/symbol_mem.hex", mem);    //4095,0); for Altera
-                                                        //); for testing and Xilinx
+        $readmemh(path2sm, mem);    //4095,0); for Altera
+                                    //); for testing and Xilinx
 
 endmodule : symbol_mem

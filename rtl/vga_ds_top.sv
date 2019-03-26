@@ -13,7 +13,8 @@
 
 module vga_ds_top
 #(
-    parameter                   cpu = "nanoFOX"
+    parameter                   cpu = "nanoFOX",
+    parameter                   sub_path = "../"
 )(
     input   logic   [0  : 0]    clk,        // clock
     input   logic   [0  : 0]    resetn,     // reset
@@ -31,7 +32,8 @@ module vga_ds_top
 
     localparam          REG_VALUE_WIDTH = 8;
     localparam          REG_VALUE_POS   = cpu == "nanoFOX" ? 10 : ( cpu == "schoolMIPS" ? 6 : 0);
-    localparam          path2dm         = cpu == "nanoFOX" ? "../vga_mem/display_mem_nanoFOX.hex" : ( cpu == "schoolMIPS" ? "../vga_mem/display_mem_schoolMIPS.hex" : "error!"); 
+    localparam          path2dm         = { sub_path , "vga_mem/display_mem_", cpu ,".hex" };
+    localparam          path2sm         = { sub_path , "vga_mem/symbol_mem.hex" };
 
     logic   [2  : 0]    pix_x;          // current pixel x position in symbol memory
     logic   [3  : 0]    pix_y;          // current pixel y position in symbol memory
@@ -72,6 +74,9 @@ module vga_ds_top
     );
     // creating one symbol memory
     symbol_mem 
+    #(
+        .path2sm    ( path2sm           )
+    )
     symbol_mem_0
     (
         .clk        ( clk               ),  // clock

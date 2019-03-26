@@ -11,7 +11,7 @@
 
 module display_mem
 #(
-    parameter                   path2dm = "../vga_mem/display_mem_nanoFOX.hex" // path to display name
+    parameter                   path2dm = "insert path to display_mem_*.hex" // path to display mem
 )(
     input   logic   [6  : 0]    disp_x,  // display x symbol position
     input   logic   [13 : 0]    disp_y,  // display y symbol position
@@ -23,6 +23,6 @@ module display_mem
     assign ascii = mem[ disp_x + disp_y ];
 
     initial // loading display memory
-        $readmemh("../vga_mem/display_mem_SchoolMIPS.hex", mem);
+        $readmemh(path2dm, mem);
 
 endmodule : display_mem
