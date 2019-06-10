@@ -9,8 +9,6 @@
 *                      Stanislav Zhelnio
 */
 
-`include    "vga.svh"
-
 module vga_ds_top
 #(
     parameter                   cpu = "nanoFOX",
@@ -32,8 +30,8 @@ module vga_ds_top
 
     localparam          REG_VALUE_WIDTH = 8;
     localparam          REG_VALUE_POS   = cpu == "nanoFOX" ? 10 : ( cpu == "schoolMIPS" ? 6 : 0);
-    localparam          path2dm         = { sub_path , "vga_mem/display_mem_", cpu ,".hex" };
-    localparam          path2sm         = { sub_path , "vga_mem/symbol_mem.hex" };
+    localparam          path2dm         = { sub_path , "vga_mem/sv/display_mem_", cpu ,".hex" };
+    localparam          path2sm         = { sub_path , "vga_mem/sv/symbol_mem.hex" };
 
     logic   [2  : 0]    pix_x;          // current pixel x position in symbol memory
     logic   [3  : 0]    pix_y;          // current pixel y position in symbol memory

@@ -9,7 +9,7 @@
 *                      Stanislav Zhelnio
 */
 
-`include    "vga.svh"
+`include    "../../inc/sv/vga.svh"
 
 module vga_pix_symbol
 (

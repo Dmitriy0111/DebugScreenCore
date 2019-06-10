@@ -20,4 +20,4 @@ vga_top is top module DebugScreenCore
 *   bgColor defined background color;
 *   fgColor defined foreground color (symbols color).
 
-Example of connection vga_top described in vga_debug_screen.sv file.
+Example of connection vga_top described in vga_debug_screen.sv or vga_debug_screen.vhd files.

@@ -1,19 +1,27 @@
+set test "sv"
+set test "vhdl"
 
-# create modelsim working library
 vlib work
 
-# compile all the Verilog sources
-vlog -sv ../rtl/*.*v 
-vlog -sv ../tb/*.*v 
+if {$test == "vhdl"} {
 
-# open the testbench module for simulation
+    vcom -2008 ../inc/vhdl/*.vhd        -work dsc
+    vcom -2008 ../vga_mem/vhdl/*.vhd    -work dsc
+
+    vcom -2008  ../rtl/vhdl/*.vhd
+
+} elseif {$test == "sv"} {
+
+    vlog -sv ../rtl/sv/*.*v 
+
+}
+
+vlog ../tb/vga_tb.sv
+
 vsim -novopt work.vga_tb
 
-# add all testbench signals to time diagram
 add wave sim:/vga_tb/vga_debug_screen_50MHz_0/*
 
-# run the simulation
 run -all
 
-# expand the signals time diagram
 wave zoom full
