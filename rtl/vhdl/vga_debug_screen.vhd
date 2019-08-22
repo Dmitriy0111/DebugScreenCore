@@ -17,8 +17,8 @@ use ieee.std_logic_unsigned.all;
 entity vga_debug_screen_50MHz is
     generic
     (
-        bgColor : std_logic_vector(11 downto 0) := 12X"00f";
-        fgColor : std_logic_vector(11 downto 0) := 12X"f00"
+        bgColor : std_logic_vector(11 downto 0) := 12X"00F";
+        fgColor : std_logic_vector(11 downto 0) := 12X"F00"
     );
     port 
     (
@@ -101,8 +101,8 @@ use ieee.std_logic_unsigned.all;
 entity vga_debug_screen_pll_25_175MHz is
     generic
     (
-        bgColor : std_logic_vector(11 downto 0) := 12X"00f";
-        fgColor : std_logic_vector(11 downto 0) := 12X"f00"
+        bgColor : std_logic_vector(11 downto 0) := 12X"00F";
+        fgColor : std_logic_vector(11 downto 0) := 12X"F00"
     );
     port 
     (

@@ -77,17 +77,17 @@ module vga_tb();
         end
     end
     
-    integer file;
+    integer fp;
 
     initial
     begin
-        file = $fopen("../log","w");
+        fp = $fopen("../log","w");
         fork
             forever
             begin
                 if( ( hsync == '1 ) && ( { R , G , B } != '0 ) )
                 begin
-                    $fwrite(file, "%s", ( { R , G , B } == background ) ? " " : ( { R , G , B } == foreground ) ? "#" : "" );
+                    $fwrite(fp, "%s", ( { R , G , B } == background ) ? " " : ( { R , G , B } == foreground ) ? "#" : "" );
                 end
                     @(negedge clk);
                     @(negedge clk);
@@ -95,7 +95,7 @@ module vga_tb();
             forever
             begin
                 @(negedge hsync);
-                $fwrite(file,"\n");
+                $fwrite(fp,"\n");
             end
         join
     end

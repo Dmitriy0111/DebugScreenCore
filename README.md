@@ -21,3 +21,8 @@ vga_top is top module DebugScreenCore
 *   fgColor defined foreground color (symbols color).
 
 Example of connection vga_top described in vga_debug_screen.sv or vga_debug_screen.vhd files.
+
+## VGA output example for nanoFOX core
+![VGA output nanoFOX](doc/nanoFOX_screen.jpg)
+## VGA output example for schoolMIPS core
+![VGA output schoolMIPS](doc/schoolMIPS_screen.jpg)
