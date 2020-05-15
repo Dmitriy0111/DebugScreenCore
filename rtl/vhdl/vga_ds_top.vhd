@@ -23,22 +23,23 @@ use dsc.dsc_components.all;
 entity vga_ds_top is
     generic
     (
-        cpu     : string := "nanoFOX"
+        cpu         : string := "nanoFOX";
+        sub_path    : string := ""
     );
     port 
     (
-        clk     : in    std_logic;                      -- clock
-        resetn  : in    std_logic;                      -- reset
-        en      : in    std_logic;                      -- enable input
-        hsync   : out   std_logic;                      -- hsync output
-        vsync   : out   std_logic;                      -- vsync output
-        bgColor : in    std_logic_vector(11 downto 0);  -- background color
-        fgColor : in    std_logic_vector(11 downto 0);  -- foreground color
-        regData : in    std_logic_vector(31 downto 0);  -- register data input from cpu
-        regAddr : out   std_logic_vector(4  downto 0);  -- register addr output to cpu
-        R       : out   std_logic_vector(3  downto 0);  -- R-color
-        G       : out   std_logic_vector(3  downto 0);  -- G-color
-        B       : out   std_logic_vector(3  downto 0)   -- B-color
+        clk         : in    std_logic;                      -- clock
+        resetn      : in    std_logic;                      -- reset
+        en          : in    std_logic;                      -- enable input
+        hsync       : out   std_logic;                      -- hsync output
+        vsync       : out   std_logic;                      -- vsync output
+        bgColor     : in    std_logic_vector(11 downto 0);  -- background color
+        fgColor     : in    std_logic_vector(11 downto 0);  -- foreground color
+        regData     : in    std_logic_vector(31 downto 0);  -- register data input from cpu
+        regAddr     : out   std_logic_vector(4  downto 0);  -- register addr output to cpu
+        R           : out   std_logic_vector(3  downto 0);  -- R-color
+        G           : out   std_logic_vector(3  downto 0);  -- G-color
+        B           : out   std_logic_vector(3  downto 0)   -- B-color
     );
 end vga_ds_top;
 
